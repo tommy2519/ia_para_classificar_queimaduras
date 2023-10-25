@@ -1,0 +1,8 @@
+# Ignorar o diretório "ven"
+env/
+venv/
+
+# Ignorar os arquivos "modelo_v2.h5" e "burn_degree_classifier.h5"
+modelo_v2.h5
+modelo_v3.h5
+burn_degree_classifier.h5
