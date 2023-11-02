@@ -5,9 +5,9 @@ from tensorflow.keras.preprocessing import image
 import tratalesoes_ui
 
 
-def modelo_ia():
+def modelo_ia(file_path):
     # Carregar o modelo treinado------------> ponha a versão do modelo trainado aqui
-    model = tf.keras.models.load_model('modelo_v2.h5')
+    model = tf.keras.models.load_model('modelos/modelo_v2.h5')
 
     # Caminho para a imagem a ser testadab #########################################
     test_image_path = file_path

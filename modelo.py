@@ -3,9 +3,10 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras.preprocessing import image
 
+
 def modelo_ia(file_path):
     # Carregar o modelo treinado
-    model = tf.keras.models.load_model('modelo_v3.h5')
+    model = tf.keras.models.load_model('modelos/modelo_v3.h5')
 
     # Caminho para a imagem a ser testada
     test_image_path = file_path
@@ -22,5 +23,8 @@ def modelo_ia(file_path):
     # Mapear os índices das classes para os graus de queimadura
     class_labels = {0: 'Primeiro Grau', 1: 'Segundo Grau', 2: 'Terceiro Grau'}
     predicted_class = np.argmax(prediction)
+
+    # Liberar recursos do modelo (opcional caso haja complicações, remover!)
+    tf.keras.backend.clear_session()
 
     return f"A queimadura é classificada como: {class_labels[predicted_class]}"
