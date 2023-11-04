@@ -1,83 +1,31 @@
 import tkinter as tk
-from tkinter import filedialog, Canvas, PhotoImage
-from secound_page import abrir_segunda_janela
-from tkinterdnd2 import DND_FILES, TkinterDnD
+from tkinter import filedialog
+from PIL import Image, ImageTk
 
-
-# Variável global para armazenar o valor do arquivo da imagem
-caminho_da_imagem = ""
-
-# Função para arrastar imagem ao campo e atribuir a variável global o caminho do arquivo
-def arrastar_arquivo(event):
-    global caminho_da_imagem
-    caminho_da_imagem = event.data
-    if caminho_da_imagem:
-        abrir_segunda_janela(caminho_da_imagem)
-
-
-# Função a ser chamada quando o botão "análise" for clicado
-def selecionar_arquivo():
-    global caminho_da_imagem  # Usando a variável global
+def abrir_arquivo():
     caminho_da_imagem = filedialog.askopenfilename(filetypes=[("Imagens", "*.jpg *.png *.jpeg")])
     if caminho_da_imagem:
-        rotulo.config(text=f"Imagem selecionada: {caminho_da_imagem}")
-        # Abrir a terceira janela ao finalizar a função
-        abrir_segunda_janela(caminho_da_imagem)
+        carregar_imagem(caminho_da_imagem)
+
+def carregar_imagem(caminho_da_imagem):
+    imagem_pil = Image.open(caminho_da_imagem)
+    imagem_tk = ImageTk.PhotoImage(imagem_pil)
+    canvas.create_image(0, 0, anchor="nw", image=imagem_tk)
+    canvas.imagem_tk = imagem_tk  # Mantém uma referência à imagem para evitar a coleta de lixo
 
 # Cria uma instância da janela
-janela = TkinterDnD.Tk()
+janela = tk.Tk()
+janela.title("Exibir Imagem")
+janela.geometry("800x600")
 
-# Define a cor de fundo da janela
-janela.configure(bg="#259073")
-
-# Título da janela
-janela.title("Home Page")
-
-# Define as dimensões da janela
-janela.geometry("1280x800")
-
-# Cria um Canvas como área de soltura
-canvas = tk.Canvas(janela, width=750, height=400, bg="#7FDA89")
-canvas.pack(padx=40, pady=75)
-
-# Carregue uma imagem (ícone)
-icone = PhotoImage(file="icon/upload-de-arquivo.png")
-# Redimensione o ícone para o tamanho desejado
-icone_redimensionado = icone.subsample(icone.width() // 100, icone.height() // 100)
-
-# Adicione o ícone ao Canvas no canto superior esquerdo (coordenadas 0, 0)
-canvas.create_image(20, 20, anchor="nw", image=icone_redimensionado)
-
-# Registra o Canvas para aceitar arquivos arrastados
-canvas.drop_target_register(DND_FILES)
-canvas.dnd_bind('<<Drop>>', arrastar_arquivo)
-
-# Adicione um texto dentro do Canvas
-texto = "Arraste uma imagem aqui."
-texto_id = canvas.create_text(150, 150, text=texto, font=("Arial", 25), fill="white")
-
-# Obtenha as dimensões do Canvas
-canvas_width = canvas.winfo_reqwidth()
-canvas_height = canvas.winfo_reqheight()
-
-# Calcule a posição central do Canvas
-x_center = canvas_width / 2
-y_center = canvas_height / 2
-
-# Atualize a posição do texto para o centro
-canvas.coords(texto_id, x_center, y_center)
-
-# Texto da caíxa de seleção da imagem
-rotulo = tk.Label(janela, text="Arraste sua Imagem Aqui.", bg="#259073")
-
-# Botão de Fazer Análise
-botao = tk.Button(janela, text="Buscar Imagem.", command=selecionar_arquivo, bg="#7FDA89", fg="#FFFFFF")
+# Cria um botão para abrir o arquivo
+botao = tk.Button(janela, text="Selecionar Imagem", command=abrir_arquivo)
 botao.pack()
 
-# Realizar o evento da ação do botão "análise"
-#rotulo.bind("<Button-1>", mostrar_mensagem)
-
-
+# Cria um Canvas para exibir a imagem
+canvas = tk.Canvas(janela, width=750, height=400, bg="#7FDA89")
+#canvas.pack(padx=40, pady=75)
+canvas.pack()
 
 # Inicia o loop principal da GUI
 janela.mainloop()

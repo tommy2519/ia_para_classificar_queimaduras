@@ -5,6 +5,9 @@ from third_page import abrir_terceira_janela
 
 # Função para abrir a segunda janela
 def abrir_segunda_janela(caminho_da_imagem):
+
+    global classificacao
+
     segunda_janela = tk.Tk()
     # Define a cor de fundo da janela
     segunda_janela.configure(bg="#259073")
@@ -15,9 +18,10 @@ def abrir_segunda_janela(caminho_da_imagem):
     caminho_label = tk.Label(segunda_janela, text=f"Valor de caminho_da_imagem: {caminho_da_imagem}")
     caminho_label.pack()
 
-    
+
     # Atribuindo o valor da análise a variável
     resultado_analise = modelo_ia(caminho_da_imagem)
+
 
 
     # Exibir o resultado da análise
@@ -29,5 +33,3 @@ def abrir_segunda_janela(caminho_da_imagem):
     segunda_janela.after(5000, lambda: abrir_terceira_janela(segunda_janela, resultado_analise))
 
     segunda_janela.mainloop()
-
-
