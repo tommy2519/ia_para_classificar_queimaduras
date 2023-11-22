@@ -5,6 +5,7 @@ import os
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.preprocessing import image
+from tkinterdnd2 import DND_FILES, TkinterDnD
 
 file_path = None
 
@@ -18,7 +19,7 @@ def searchFile(parent_window):
 
 def modelo_ia():
     # Carregar o modelo treinado
-    model = tf.keras.models.load_model('modelo_v3.h5')
+    model = tf.keras.models.load_model('modelos/modelo_v3.h5')
 
     # Caminho para a imagem a ser testada
     test_image_path = file_path
@@ -78,9 +79,17 @@ def display_image_in_third_page(parent_window):
 def close_second_and_open_third(second_page):
     second_page.destroy()
     display_image_in_third_page(firstPage)
+    
+# Cria uma instância da janela
+firstPage = TkinterDnD.Tk()
 
-firstPage = Tk()
-firstPage.title("Trata Lesões")
+# Define a cor de fundo da janela
+firstPage.configure(bg="#259073")
+
+# Título da janela
+firstPage.title("Home Page")
+
+# Define as dimensões da janela
 firstPage.geometry("1280x800")
 
 imageText = Label(firstPage, text="Arraste sua Imagem Aqui.")
@@ -88,5 +97,6 @@ imageText.grid(column=0, row=0)
 
 searchFileButton = Button(firstPage, text="Buscar Arquivo", background="#7FDA89", command=lambda: searchFile(firstPage))
 searchFileButton.grid(column=0, row=1)
+
 
 firstPage.mainloop()

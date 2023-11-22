@@ -46,10 +46,11 @@ model = Sequential([
     Dense(3, activation='softmax')  # 3 classes: 0, 1 e 2
 ])
 
+# Compilação do modelo
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
 # Treinar o modelo
 model.fit(train_generator, epochs=epochs)
 
 # Salvar o modelo treinado (burn_degree_classifier.h5)
-model.save('modelo_v3.h5')
+model.save('modelos/NOME_DO_MODELO.h5')

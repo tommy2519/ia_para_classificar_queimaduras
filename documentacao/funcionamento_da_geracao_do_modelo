@@ -1,0 +1,96 @@
+Para o desenvolvimento do modelo, começamos com a importação das bibliotecas a serem utilizadas nesse processo,
+são elas:
+	Numpy: o qual tem a função de trabalhar com manipulações de arrays, já que vamos lidar com imagens
+	TensorFlow: que vai ser usado para facilitar a construção e treinamento do modelo de IA
+	Keras: e alguns módulos específicos do tensorflow para processar imagens, como o ImageDataGeneration, 
+	o qual falaremos adiante.
+	
+	
+1 - O código inicia com uma variável (train_dir) que irá receber o caminho do diretório contendo as imagens do DataSet
+
+		train_dir = 'Imagens'
+
+2 - Em seguida é delimitado as dimensões das imagens de entrada
+
+		# Definir parâmetros do modelo
+		batch_size = 16
+		epochs = 30 # deixar em 20 durante os testes
+		input_shape = (256, 256, 3)  # Dimensões das imagens de entrada
+		
+3 - Agora através do módulo keras do TensorFlow, vamos aplicar o pré-processamento nas imagens e o aumento de dados de treinamento
+	3.1 O pré processamento se dá no escalonamento dos pixels para o intervalo [0,1], o qual ajudará em todo processo que envolva o fluxo
+		desses dados no modelo por diminuir o seu tamanho e pela padronização dos dados.
+	3.2 O ImageDataGeneration, em seguida aplica um aumento de dados de treinamento, isso ocorre da seguinte maneira... os dados do DataSet
+		são carregados pelo imageGeneration, em seguida ele faz algumas cópias dos dados existente aplicando edições a eles, logo gerando novos
+		 casos pra cada dado, e em seguida atribui ao dataSet essas novas imagens geradas.
+			
+			# Preprocessamento e aumento de dados
+			train_datagen = ImageDataGenerator(
+   			rescale=1.0/255,
+   			rotation_range=20,
+  			width_shift_range=0.2,
+   			height_shift_range=0.2,
+   			shear_range=0.2,
+   			zoom_range=0.2,
+			horizontal_flip=True,
+  			fill_mode='nearest'
+			)
+			
+			train_generator = train_datagen.flow_from_directory(
+    			train_dir,
+   	 		target_size=(input_shape[0], input_shape[1]),
+    			batch_size=batch_size,
+    			class_mode='categorical'
+			)
+			
+4 - Finalmente vamos falar como foi desenvolvido o escopo dos neurônios do modelo
+
+	4.1 O modelo gerado usa da arquitetura CNN sequencial
+	4.2 E falando sobre os seus neurônios constituintes, temos:
+			
+			As camadas de convolução(conv2D), que tem o objetivo de extrair as características das queimaduras, passando para
+			a próxima camada que é a de max pooling (MaxPooling2D) o qual reduz o tamanho da representação das características importantes
+			que representam a queimadura, com o intuito de diminuir o processamento computacional necessário.
+			
+			Temos a próxima camada, FLATTEN, que realiza a transformação do mapa de características de bidimencional para unidimencional
+			com o objetivo de preparar os dados para alimentar as próximas camadas que são as 
+			
+			Camadas totalmente conectadas ou densas que realizam as operações matemáticas nos dados gerando os pesos das características
+			das queimaduras
+			
+			Em seguida temos a camada de DropOut, que tem o objetivo de prevenir o overfitting, desligando aleatoriamente alguns neurônios
+			a cada época (para evitar o uso excessivo dependente entre alguns neurônios)
+			
+			E por fim a camada SOFTMAX a qual irá gerar uma probabilidade para cada dado pertencer a uma categoria de análise, no caso se a 
+			imagem em questão constitui uma queimadura de 1°, 2° ou 3° grau.
+			
+			
+				# Construir o modelo da CNN
+				model = Sequential([
+    				Conv2D(32, (3, 3), activation='relu', input_shape=input_shape),
+    				MaxPooling2D(2, 2),
+    				Conv2D(64, (3, 3), activation='relu'),
+    				MaxPooling2D(2, 2),
+    				Conv2D(128, (3, 3), activation='relu'),
+    				MaxPooling2D(2, 2),
+    				Flatten(),
+    				Dense(512, activation='relu'),
+    				Dropout(0.5),
+    				Dense(3, activation='softmax')  # 3 classes: 0, 1 e 2
+				])
+			
+5 -  Agora o modelo é compilado com seus neurônios
+
+				model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+
+6 - em seguida é realizado o treinamento com os dados de treinamento tratados (Uso do método fit para treinar o modelo com os dados gerados pelo train_generator)
+
+				# Treinar o modelo
+				model.fit(train_generator, epochs=epochs)
+				
+7 - Por fim o modelo é salvo em um arquivo
+
+				# Salvar o modelo treinado (burn_degree_classifier.h5)
+				model.save('modelos/NOME_DO_MODELO.h5')
+			
+			

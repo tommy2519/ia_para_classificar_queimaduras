@@ -1,13 +1,21 @@
 import tkinter as tk
 from modelo import classificacao
+from PIL import Image, ImageTk
+#import first_page
 
+
+# Função para voltar a primeira página
+def voltar_janela(terceira_janela):
+    from first_page import abrir_primeira_janela
+    abrir_primeira_janela()
+        
 
 # Função para abrir a terceira janela
-def abrir_terceira_janela(janela_segunda,resultado_analise):
-    janela_segunda.withdraw()  # Oculta a segunda janela
+def abrir_terceira_janela(segunda_janela,resultado_analise):
+
+    segunda_janela.withdraw()  # Oculta a segunda janela
     terceira_janela = tk.Tk()
     # Define a cor de fundo da janela
-    terceira_janela.configure(bg="#259073")
     terceira_janela.title("Terceira Janela")
     terceira_janela.geometry("1280x800")
 
@@ -20,6 +28,19 @@ def abrir_terceira_janela(janela_segunda,resultado_analise):
     # Crie um Canvas para posicionar os Labels
     canvas = tk.Canvas(terceira_janela, bg="#259073")
     canvas.pack(fill="both", expand=True)
+
+
+
+
+
+
+
+
+
+    # Botão de voltar para a página de selecionar a imagem
+    botao = tk.Button(terceira_janela, text="VOLTAR", command=voltar_janela, bg="#7FDA89", fg="#FFFFFF")
+    botao.pack()
+
 
     # Texto classificação
     classificacao_queimadura = tk.Label(terceira_janela, text=f"I - GRAU DA QUEIMADURA (CLASSIFICAÇÃO):\n{classificacao[0]}", justify="left", bg="#259073", fg="white")
@@ -44,3 +65,21 @@ def abrir_terceira_janela(janela_segunda,resultado_analise):
 
 
     terceira_janela.mainloop()
+
+
+
+
+
+"""     if caminho_da_imagem:
+        selected_image = Image.open(caminho_da_imagem)
+        selected_image = selected_image.resize((720, 480), resample=Image.LANCZOS)
+
+        tk_image = ImageTk.PhotoImage(selected_image)
+
+        label = Label(terceira_janela, image=tk_image)
+        label.image = tk_image
+        label.grid(column=0, row=0)
+    
+    result_label = Label(terceira_janela, text=result_text)
+    result_label.grid(column=0, row=1)
+"""
